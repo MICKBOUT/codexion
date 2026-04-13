@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:13:14 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/13 16:21:09 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/13 17:09:36 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,24 +58,36 @@ int	parsing_arg(char **av, t_arg *arg)
 	return (1);
 }
 
+int	free_on_exit(void *pt1, void *pt2)
+{
+	if (pt1)
+		free(pt1);
+	if (pt2)
+		free(pt2);
+	return (0);
+}
+
 int	main(int ac, char **av)
 {
-	t_coder	*coder_tab;
-	t_arg	arg;
-	int		i;
+	t_coder		*coder_tab;
+	t_dongle	*dongle_tab;
+	t_arg		arg;
+	int			i;
 
 	if ((ac != 9) || (!parsing_arg(av + 1, &arg)))
 	{
-		printf("Parcing Error\n");
+		printf("Parsing Error\n");
 		return (0);
 	}
 	coder_tab = malloc(sizeof(t_coder) * arg.number_of_coders);
-	if (!coder_tab)
-		return (0);
+	dongle_tab = malloc(sizeof(t_dongle) * arg.number_of_coders);
+	if ((!coder_tab) || (!dongle_tab))
+		return (free_on_exit(coder_tab, dongle_tab));
 	i = -1;
 	while (++i < arg.number_of_coders)
+	{
 		coder_tab[i].number = i + 1;
-	i = 0;
-	free(coder_tab);
-	return (0);
+		dongle_tab[i].number = i + 1;
+	}
+	return (free_on_exit(coder_tab, dongle_tab));
 }
