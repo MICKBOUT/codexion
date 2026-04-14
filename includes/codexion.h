@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:13:09 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/13 17:09:20 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/14 12:09:36 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,17 @@ typedef struct s_data
 	int				counter;
 }	t_data;
 
-typedef struct s_coder
-{
-	int	number;
-}	t_coder;
-
 typedef struct s_dongle
 {
 	int	number;
 }	t_dongle;
+
+typedef struct s_coder
+{
+	t_dongle	*left_dongle;
+	t_dongle	*right_dongle;
+	int			number;
+}	t_coder;
 
 typedef struct s_arg
 {

@@ -6,11 +6,11 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:13:14 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/13 17:09:36 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/14 13:13:41 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "head.h"
+#include "codexion.h"
 
 int	ft_atoi_pos(const char *n)
 {
@@ -58,13 +58,55 @@ int	parsing_arg(char **av, t_arg *arg)
 	return (1);
 }
 
-int	free_on_exit(void *pt1, void *pt2)
+int	exit_error_parsing(void)
 {
-	if (pt1)
-		free(pt1);
-	if (pt2)
-		free(pt2);
+	printf("Parsing Error\n");
 	return (0);
+}
+
+int	exit_free_ptr(void *ptr1, void *ptr2)
+{
+	if (ptr1)
+		free(ptr1);
+	if (ptr2)
+		free(ptr2);
+	return (0);
+}
+
+t_dongle	*init_dongle_tab(int nb_coders)
+{
+	t_dongle	*dongle_tab;
+	int			i;
+
+	dongle_tab = malloc(sizeof(t_dongle) * nb_coders);
+	if (!dongle_tab)
+		return (NULL);
+	i = 0;
+	while (i < nb_coders)
+	{
+		dongle_tab[i].number = i;
+		i++;
+	}
+	return (dongle_tab);
+}
+
+t_coder	*init_coder_tab(int nb_coders, t_dongle *dongle_tab)
+{
+	t_coder	*coder_tab;
+	int		i;
+
+	coder_tab = malloc(sizeof(t_coder) * nb_coders);
+	if (!dongle_tab || !coder_tab)
+		return (NULL);
+	i = 0;
+	while (i < nb_coders)
+	{
+		coder_tab[i].number = i + 1;
+		coder_tab[i].left_dongle = &(dongle_tab[i]);
+		coder_tab[i].right_dongle = &(dongle_tab[(i + 1) % nb_coders]);
+		i++;
+	}
+	return (coder_tab);
 }
 
 int	main(int ac, char **av)
@@ -72,22 +114,14 @@ int	main(int ac, char **av)
 	t_coder		*coder_tab;
 	t_dongle	*dongle_tab;
 	t_arg		arg;
-	int			i;
 
 	if ((ac != 9) || (!parsing_arg(av + 1, &arg)))
-	{
-		printf("Parsing Error\n");
-		return (0);
-	}
-	coder_tab = malloc(sizeof(t_coder) * arg.number_of_coders);
-	dongle_tab = malloc(sizeof(t_dongle) * arg.number_of_coders);
+		return (exit_error_parsing());
+	dongle_tab = init_dongle_tab(arg.number_of_coders);
+	coder_tab = init_coder_tab(arg.number_of_coders, dongle_tab);
 	if ((!coder_tab) || (!dongle_tab))
-		return (free_on_exit(coder_tab, dongle_tab));
-	i = -1;
-	while (++i < arg.number_of_coders)
-	{
-		coder_tab[i].number = i + 1;
-		dongle_tab[i].number = i + 1;
-	}
-	return (free_on_exit(coder_tab, dongle_tab));
+		return (exit_free_ptr(coder_tab, dongle_tab));
+	for (int j = 0; j < arg.number_of_coders; j++)
+		printf("coder_nb:%d|left_pt:%p|left_nb:%d|right_pt:%p|right_nb:%d|\n", coder_tab[j].number, coder_tab[j].left_dongle, coder_tab[j].left_dongle->number, coder_tab[j].right_dongle, coder_tab[j].right_dongle->number);
+	return (exit_free_ptr(coder_tab, dongle_tab));
 }

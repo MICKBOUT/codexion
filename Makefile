@@ -1,17 +1,38 @@
-CCC		= cc -Wall -Werror -Wextra
-SRC		= main.c
-MAIN	= codexion
+CC= cc
+CFLAGS= -Werror -Wextra -Wall -MMD -MP -Iincludes
+
+SRCDIR= src
+SRCS=\
+	main.c
+
+NAME= codexion
+
+OBJDIR= .obj
+
+OBJS= $(SRCS:%.c=$(OBJDIR)/%.o)
+DEPS= $(OBJS:.o=.d)
 
 
+all: $(NAME)
 
-all:
-	$(CCC) $(SRC) -o $(MAIN)
+$(NAME): $(OBJS) Makefile
+	$(CC) $(OBJS) -o $@
 
-run: all
-	./$(MAIN) 12 1 2 3 4 10 6 "edf"
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 val: all
 	valgrind ./$(MAIN) 8 7 6 5 4 3 2 "edf"
 
 clean:
-	rm -rf $(MAIN)
+	rm -rf $(OBJS) $(DEPS) $(OBJDIR)
+
+fclean: clean
+	rm -f $(NAME)
+
+re: fclean all
+
+-include $(DEPS) $(DEPS_bonus)
+
+.PHONY: all clean fclean re
