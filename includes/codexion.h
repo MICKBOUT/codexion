@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   head.h                                             :+:      :+:    :+:   */
+/*   codexion.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:13:09 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/14 12:09:36 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/14 17:29:49 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <limits.h>
+#include <string.h>
+#include <sys/time.h>
 
 #define NUM_THREADS 4
 #define INCREMENTS 1000000
@@ -49,3 +51,11 @@ typedef struct s_arg
 	int		dongle_cooldown;
 	char	*scheduler;
 }	t_arg;
+
+int			parsing_arg(char **av, t_arg *arg);
+
+t_coder		*init_coder_tab(int nb_coders, t_dongle *dongle_tab);
+t_dongle	*init_dongle_tab(int nb_coders);
+
+int			exit_error_parsing(void);
+int			exit_free_ptr(void *ptr1, void *ptr2);
