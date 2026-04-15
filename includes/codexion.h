@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:13:09 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/15 15:28:45 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/15 16:37:48 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,6 @@ typedef struct s_coder
 	int			number;
 }	t_coder;
 
-typedef struct s_worker_data
-{
-	int			time_to_compile;
-	t_coder		*coder_ptr;
-	
-}	t_worker_data;
-
 typedef struct s_arg
 {
 	int		number_of_coders;
@@ -60,4 +53,5 @@ t_coder		*init_coder_tab(int nb_coders, t_dongle *dongle_tab);
 t_dongle	*init_dongle_tab(int nb_coders);
 
 int			exit_error_parsing(void);
-int			exit_free_ptr(void *ptr1, void *ptr2);
+int			exit_free_ptr(\
+t_coder *coder_tab, t_dongle *dongle_tab, pthread_t *threads, int n);

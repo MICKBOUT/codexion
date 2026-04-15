@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 13:25:44 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/15 14:35:06 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/15 15:46:56 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ t_dongle	*init_dongle_tab(int nb_coders)
 	i = 0;
 	while (i < nb_coders)
 	{
+		pthread_mutex_init(&dongle_tab[i].lock_dispo, NULL);
 		dongle_tab[i].number = i;
 		dongle_tab[i].available = 1;
 		i++;

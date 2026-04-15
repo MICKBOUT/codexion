@@ -1,5 +1,5 @@
 CC= cc
-CFLAGS= -Werror -Wextra -Wall -MMD -MP -Iincludes
+CFLAGS= -Werror -Wextra -Wall -MMD -MP -Iincludes -g -pthread
 
 SRCDIR= src
 SRCS=\
@@ -26,7 +26,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 val: all
-	valgrind ./$(MAIN) 8 7 6 5 4 3 2 "edf"
+	valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all ./$(NAME) 8 7 6 5 4 3 2 "edf"
 
 clean:
 	rm -rf $(OBJS) $(DEPS) $(OBJDIR)
