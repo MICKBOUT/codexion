@@ -6,31 +6,26 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:13:09 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/14 17:29:49 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/15 15:28:45 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <pthread.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdio.h>
 #include <limits.h>
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
+#include <unistd.h>
 
 #define NUM_THREADS 4
 #define INCREMENTS 1000000
 
-typedef struct s_data
-{
-	pthread_mutex_t	lock;
-	int				counter;
-}	t_data;
-
 typedef struct s_dongle
 {
-	int	number;
+	pthread_mutex_t	lock_dispo;
+	int				available;
+	int				number;
 }	t_dongle;
 
 typedef struct s_coder
@@ -39,6 +34,13 @@ typedef struct s_coder
 	t_dongle	*right_dongle;
 	int			number;
 }	t_coder;
+
+typedef struct s_worker_data
+{
+	int			time_to_compile;
+	t_coder		*coder_ptr;
+	
+}	t_worker_data;
 
 typedef struct s_arg
 {

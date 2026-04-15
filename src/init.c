@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 13:25:44 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/14 13:25:51 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/15 14:35:06 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ t_dongle	*init_dongle_tab(int nb_coders)
 	while (i < nb_coders)
 	{
 		dongle_tab[i].number = i;
+		dongle_tab[i].available = 1;
 		i++;
 	}
 	return (dongle_tab);
