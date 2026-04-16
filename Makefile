@@ -3,10 +3,11 @@ CFLAGS= -Werror -Wextra -Wall -MMD -MP -Iincludes -g -pthread
 
 SRCDIR= src
 SRCS=\
-	main.c		\
 	exit.c		\
-	parsing.c	\
 	init.c		\
+	main.c		\
+	parsing.c	\
+	utils.c		\
 
 NAME= codexion
 
