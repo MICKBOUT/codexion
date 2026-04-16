@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 13:20:20 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/16 14:13:52 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/16 17:24:19 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,17 @@ int	exit_error_parsing(void)
 	return (0);
 }
 
-int	exit_free_ptr(t_coder *coder_tab, t_dongle *dongle_tab, t_global global_data, int n)
+int	exit_free(t_coder *coder_tab, t_dongle *dongle_tab, t_global global_data)
 {
 	int	i;
 
 	if (coder_tab)
 		free(coder_tab);
-	i = 0;
 	if (dongle_tab)
 	{
-		while (i < n)
-		{
+		i = -1;
+		while (++i < global_data.args.number_of_coders)
 			pthread_mutex_destroy(&dongle_tab[i].lock_available);
-			i++;
-		}
 		free(dongle_tab);
 	}
 	if (global_data.threads)
