@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 13:25:44 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/16 14:12:47 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/16 14:30:47 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ t_global	init_global_data(int time_to_compile, int nb_coders)
 	global_data.time_to_compile = time_to_compile;
 	return (global_data);
 }
-
 
 t_dongle	*init_dongle_tab(int nb_coders)
 {

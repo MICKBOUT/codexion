@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:13:09 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/16 14:27:10 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/16 14:30:30 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ typedef struct s_global
 	int				time_to_compile;
 	pthread_t		*threads;
 }	t_global;
-
 
 typedef struct s_dongle
 {
@@ -62,8 +61,8 @@ t_dongle	*init_dongle_tab(int nb_coders);
 t_coder		*init_coder_tab(int nb_coders, t_dongle *dongle_tab, t_global *global_ptr);
 
 // utils.c
-void	set_bot_dongle_available(t_coder coder);
+void		set_bot_dongle_available(t_coder coder);
 
 // exit.c
 int			exit_error_parsing(void);
-int	exit_free_ptr(t_coder *coder_tab, t_dongle *dongle_tab, t_global global_data, int n);
+int			exit_free_ptr(t_coder *coder_tab, t_dongle *dongle_tab, t_global global_data, int n);

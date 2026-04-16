@@ -6,22 +6,17 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:13:14 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/16 14:29:08 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/16 14:36:00 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-
 void	*worker_logic(t_coder coder)
 {
-	struct	timeval time;
-	long	t_start;
+	struct timeval	time;
+	long			t_start;
 
-	coder.left_dongle->available = 0;
-	pthread_mutex_unlock(&coder.left_dongle->lock_available);
-	coder.right_dongle->available = 0;
-	pthread_mutex_unlock(&coder.right_dongle->lock_available);
 	gettimeofday(&time, NULL);
 	t_start = time.tv_sec * 1000000 + time.tv_usec;
 	while ((time.tv_sec * 1000000 + time.tv_usec) - t_start < (coder.global_ptr->time_to_compile * 1000))
@@ -38,20 +33,29 @@ void	*worker_logic(t_coder coder)
 
 void	*worker(void *coder_ptr)
 {
-	t_coder	coder = *(t_coder *)coder_ptr;
+	t_coder	coder;
 
-	while (1)
+	coder = *(t_coder *)coder_ptr;
+	if (coder.left_dongle->number < coder.right_dongle->number)
+		pthread_mutex_lock(&coder.left_dongle->lock_available);
+	pthread_mutex_lock(&coder.right_dongle->lock_available);
+	if (coder.left_dongle->number > coder.right_dongle->number)
+		pthread_mutex_lock(&coder.left_dongle->lock_available);
+	while (coder.left_dongle->available == 0 || coder.right_dongle->available == 0)
 	{	
+		pthread_mutex_unlock(&coder.left_dongle->lock_available);
+		pthread_mutex_unlock(&coder.right_dongle->lock_available);
 		if (coder.left_dongle->number < coder.right_dongle->number)
 			pthread_mutex_lock(&coder.left_dongle->lock_available);
 		pthread_mutex_lock(&coder.right_dongle->lock_available);
 		if (coder.left_dongle->number > coder.right_dongle->number)
 			pthread_mutex_lock(&coder.left_dongle->lock_available);
-		if (coder.left_dongle->available == 1 && coder.right_dongle->available == 1)
-			return (worker_logic(coder));
-		pthread_mutex_unlock(&coder.left_dongle->lock_available);
-		pthread_mutex_unlock(&coder.right_dongle->lock_available);
 	}
+	coder.left_dongle->available = 0;
+	pthread_mutex_unlock(&coder.left_dongle->lock_available);
+	coder.right_dongle->available = 0;
+	pthread_mutex_unlock(&coder.right_dongle->lock_available);
+	return (worker_logic(coder));
 }
 
 int	main(int ac, char **av)
