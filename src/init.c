@@ -6,19 +6,25 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 13:25:44 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/16 14:30:47 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/16 15:12:55 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-t_global	init_global_data(int time_to_compile, int nb_coders)
+t_global	init_global_data(t_arg args)
 {
-	t_global	global_data;
+	t_global		global_data;
+	struct timeval	time;
+	long			start_time_us;
 
 	pthread_mutex_init(&global_data.lock_printf, NULL);
-	global_data.threads = malloc(sizeof(pthread_t) * nb_coders);
-	global_data.time_to_compile = time_to_compile;
+	global_data.threads = malloc(sizeof(pthread_t) * args.number_of_coders);
+	global_data.time_to_compile = args.time_to_compile;
+	global_data.time_to_debug = args.time_to_debug;
+	gettimeofday(&time, NULL);
+	start_time_us = time.tv_sec * 1000000 + time.tv_usec;
+	global_data.start_time = (start_time_us / 1000);
 	return (global_data);
 }
 
