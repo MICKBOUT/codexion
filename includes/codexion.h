@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:13:09 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/16 17:57:13 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/20 13:14:14 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ typedef struct s_global
 	pthread_mutex_t	lock_printf;
 	pthread_t		*threads;
 	t_arg			args;
+	int				status;
 	long			start_time;
 }	t_global;
 
@@ -52,11 +53,13 @@ typedef struct s_coder
 	t_global	*global_ptr;
 	t_dongle	*left_dongle;
 	t_dongle	*right_dongle;
+	long		burnout_time;
 	int			number;
+	int			running;
 }	t_coder;
 
 //execute_coder.c
-void		execute_coder(t_coder coder);
+void		execute_coder(t_coder *coder);
 
 // exit.c
 int			exit_error_parsing(void);
@@ -77,7 +80,7 @@ long		get_time_ms(void);
 long		get_time_since_start(long start_time);
 
 // utils.c
-void		set_dongle_available_after_cooldown(t_coder coder);
+void		set_dongle_available_after_cooldown(t_coder *coder);
 void		mutex_lock_dongle_coder(t_coder coder);
 void		locked_printf(pthread_mutex_t *lock, const char *fmt, ...);
-int			dongle_available(t_dongle *l_dongle, t_dongle *r_dongle);
+int			dongle_unavailable(t_dongle *l_dongle, t_dongle *r_dongle);
