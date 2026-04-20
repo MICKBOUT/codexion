@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:13:09 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/20 16:20:19 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/20 18:14:39 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,14 +82,18 @@ int			parsing_arg(char **av, t_arg *arg);
 long		get_time_ms(void);
 long		get_time_since_start(long start_time);
 
+// utils_mutex_lock.c
+void		mutex_lock_dongle(t_coder *coder);
+void		mutex_unlock_dongle(t_coder *coder);
+
 // utils_mutex.c
+void		mutex_add_int(pthread_mutex_t *lock, int *place, int add);
 void		mutex_write_int(pthread_mutex_t *lock, int *place, int var);
 int			mutex_read_int(pthread_mutex_t *lock, int *place);
 long		mutex_read_burnout_time(t_coder *coder);
 void		mutex_write_burnout_time(t_coder *coder, long time);
-void		mutex_lock_dongle(t_coder coder);
 
 // utils.c
 void		set_dongle_available_after_cooldown(t_coder *coder);
 void		locked_printf(pthread_mutex_t *lock, const char *fmt, ...);
-int			dongle_unavailable(t_dongle *l_dongle, t_dongle *r_dongle);
+int			dongle_available(t_dongle *l_dongle, t_dongle *r_dongle);

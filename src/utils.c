@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/16 14:22:37 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/20 15:47:26 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/20 18:10:58 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,14 @@ void	locked_printf(pthread_mutex_t *lock, const char *fmt, ...)
 	pthread_mutex_unlock(lock);
 }
 
-int	dongle_unavailable(t_dongle *l_dongle, t_dongle *r_dongle)
+int	dongle_available(t_dongle *l_dongle, t_dongle *r_dongle)
 {
 	long	timestamp_ms;
 
 	timestamp_ms = get_time_ms();
 	if (l_dongle->available == 0 || l_dongle->end_cooldown >= timestamp_ms)
-		return (1);
+		return (0);
 	if (r_dongle->available == 0 || r_dongle->end_cooldown >= timestamp_ms)
-		return (1);
-	return (0);
+		return (0);
+	return (1);
 }

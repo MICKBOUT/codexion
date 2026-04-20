@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:13:14 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/20 16:58:57 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/20 18:14:16 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,38 +21,35 @@ void	*worker(void *coder_ptr)
 	if (coder->left_dongle == coder->right_dongle)
 		return (NULL);
 	g_data = coder->global_ptr;
-	while (coder->nb_compil < g_data->args.number_of_compiles_required)
+	while (mutex_read_int(&g_data->lock_state, &g_data->state))
 	{
-		mutex_lock_dongle(*coder);
-		while (dongle_unavailable(coder->left_dongle, coder->right_dongle))
+		mutex_lock_dongle(coder);
+		if (dongle_available(coder->left_dongle, coder->right_dongle))
 		{
-			pthread_mutex_unlock(&coder->left_dongle->lock_available);
-			pthread_mutex_unlock(&coder->right_dongle->lock_available);
-			if (!mutex_read_int(&g_data->lock_state, &g_data->state))
-				return (NULL);
-			mutex_lock_dongle(*coder);
+			execute_coder(coder);
+			mutex_add_int(&(coder->lock), &(coder->nb_compil), 1);
+			mutex_add_int(&(coder->lock), &(coder->nb_compil), 1);
 		}
-		execute_coder(coder);
-		coder->nb_compil++;
+		else
+			mutex_unlock_dongle(coder);
 	}
-	mutex_write_int(&coder->lock, &(coder->running), 0);
 	return (NULL);
 }
 
-int	monitoring_coder(t_coder *coder)
+int	monitoring_coder(t_coder *coder, int *nb_coder_ended)
 {
 	t_global	*g_data;
 
 	g_data = coder->global_ptr;
 	if (mutex_read_burnout_time(coder) < get_time_ms())
 	{
-		pthread_mutex_lock(&g_data->lock_state);
-		g_data->state = 0;
-		pthread_mutex_unlock(&g_data->lock_state);
 		locked_printf(&g_data->lock_printf, "%ld %d burned out\n", \
 get_time_since_start(g_data->start_time), coder->id);
-		return (-1);
+		return (0);
 	}
+	if (mutex_read_int(&coder->lock, &(coder->nb_compil)) >= \
+g_data->args.number_of_compiles_required)
+		*nb_coder_ended = *nb_coder_ended + 1;
 	return (1);
 }
 
@@ -60,21 +57,26 @@ void	*monitoring(void *data)
 {
 	t_coder		*coder_tab;
 	t_global	*g_data;
-	int			running;
+	int			state;
+	int			nb_coder_ended;
 	int			i;
 
 	coder_tab = (t_coder *)data;
 	g_data = coder_tab[0].global_ptr;
-	running = 1;
-	while (running > 0)
+	state = 1;
+	nb_coder_ended = 0;
+	while (state && nb_coder_ended < g_data->args.number_of_coders)
 	{
-		running = 0;
 		i = -1;
-		while (++i < g_data->args.number_of_coders && running != -1)
+		nb_coder_ended = 0;
+		while (++i < g_data->args.number_of_coders && state)
 			if (mutex_read_int(&coder_tab[i].lock, &(coder_tab[i].running)))
-				running = monitoring_coder(coder_tab + i);
+				state = monitoring_coder(coder_tab + i, &nb_coder_ended);
+		if (state == 0)
+			mutex_write_int(&g_data->lock_state, &(g_data->state), 0);
 		usleep(100);
 	}
+	mutex_write_int(&g_data->lock_state, &(g_data->state), 0);
 	return (NULL);
 }
 
