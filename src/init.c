@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 13:25:44 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/20 15:45:20 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/20 18:21:51 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ t_coder	*init_coder_tab(int nb_coders, t_dongle *dongle_tab, t_global *g_data)
 		coder_tab[i].right_dongle = &(dongle_tab[(i + 1) % nb_coders]);
 		coder_tab[i].burnout_time = \
 get_time_ms() + g_data->args.time_to_burnout;
-		coder_tab[i].running = 1;
 		coder_tab[i].nb_compil = 0;
 		i++;
 	}

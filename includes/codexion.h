@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:13:09 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/20 18:14:39 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/20 18:21:49 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ typedef struct s_coder
 	t_dongle		*right_dongle;
 	long			burnout_time;
 	int				nb_compil;
-	int				running;
 	int				id;
 }	t_coder;
 

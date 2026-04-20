@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:13:14 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/20 18:14:16 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/20 18:22:12 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ void	*worker(void *coder_ptr)
 		if (dongle_available(coder->left_dongle, coder->right_dongle))
 		{
 			execute_coder(coder);
-			mutex_add_int(&(coder->lock), &(coder->nb_compil), 1);
 			mutex_add_int(&(coder->lock), &(coder->nb_compil), 1);
 		}
 		else
@@ -70,8 +69,7 @@ void	*monitoring(void *data)
 		i = -1;
 		nb_coder_ended = 0;
 		while (++i < g_data->args.number_of_coders && state)
-			if (mutex_read_int(&coder_tab[i].lock, &(coder_tab[i].running)))
-				state = monitoring_coder(coder_tab + i, &nb_coder_ended);
+			state = monitoring_coder(coder_tab + i, &nb_coder_ended);
 		if (state == 0)
 			mutex_write_int(&g_data->lock_state, &(g_data->state), 0);
 		usleep(100);
