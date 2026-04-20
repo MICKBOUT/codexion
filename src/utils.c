@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/16 14:22:37 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/20 13:14:05 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/20 15:47:26 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,6 @@ timestamp_ms + coder->global_ptr->args.dongle_cooldown;
 	coder->right_dongle->end_cooldown = \
 timestamp_ms + coder->global_ptr->args.dongle_cooldown;
 	pthread_mutex_unlock(&coder->right_dongle->lock_available);
-}
-
-void	mutex_lock_dongle_coder(t_coder coder)
-{
-	if (coder.left_dongle->number < coder.right_dongle->number)
-		pthread_mutex_lock(&coder.left_dongle->lock_available);
-	pthread_mutex_lock(&coder.right_dongle->lock_available);
-	if (coder.left_dongle->number > coder.right_dongle->number)
-		pthread_mutex_lock(&coder.left_dongle->lock_available);
 }
 
 void	locked_printf(pthread_mutex_t *lock, const char *fmt, ...)

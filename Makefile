@@ -9,6 +9,7 @@ SRCS=\
 	main.c			\
 	parsing.c		\
 	timing.c		\
+	utils_mutex.c	\
 	utils.c			\
 
 NAME= codexion
@@ -29,7 +30,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 val: all
-	valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all ./$(NAME) 8 7 6 5 4 3 2 "edf"
+	valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all ./$(NAME) 4 10000 100 100 100 1 100  "edf"
 
 clean:
 	rm -rf $(OBJS) $(DEPS) $(OBJDIR)

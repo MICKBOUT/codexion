@@ -6,23 +6,24 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 13:25:44 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/20 13:16:04 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/20 15:45:20 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-t_global	init_global_data(t_arg args)
+t_global	init_g_data(t_arg args)
 {
-	t_global		global_data;
+	t_global		g_data;
 
-	pthread_mutex_init(&global_data.lock_printf, NULL);
-	global_data.threads = malloc(\
+	pthread_mutex_init(&g_data.lock_printf, NULL);
+	pthread_mutex_init(&g_data.lock_state, NULL);
+	g_data.threads = malloc(\
 sizeof(pthread_t) * (args.number_of_coders + 1));
-	global_data.args = args;
-	global_data.status = 1;
-	global_data.start_time = get_time_ms();
-	return (global_data);
+	g_data.args = args;
+	g_data.state = 1;
+	g_data.start_time = get_time_ms();
+	return (g_data);
 }
 
 t_dongle	*init_dongle_tab(int nb_coders)
@@ -38,14 +39,14 @@ t_dongle	*init_dongle_tab(int nb_coders)
 	{
 		pthread_mutex_init(&dongle_tab[i].lock_available, NULL);
 		dongle_tab[i].end_cooldown = 0;
-		dongle_tab[i].number = i;
+		dongle_tab[i].id = i;
 		dongle_tab[i].available = 1;
 		i++;
 	}
 	return (dongle_tab);
 }
 
-t_coder	*init_coder_tab(int nb_coders, t_dongle *dongle_tab, t_global *global)
+t_coder	*init_coder_tab(int nb_coders, t_dongle *dongle_tab, t_global *g_data)
 {
 	t_coder	*coder_tab;
 	int		i;
@@ -56,13 +57,15 @@ t_coder	*init_coder_tab(int nb_coders, t_dongle *dongle_tab, t_global *global)
 	i = 0;
 	while (i < nb_coders)
 	{
-		coder_tab[i].global_ptr = global;
-		coder_tab[i].number = i + 1;
+		pthread_mutex_init(&coder_tab[i].lock, NULL);
+		coder_tab[i].global_ptr = g_data;
+		coder_tab[i].id = i + 1;
 		coder_tab[i].left_dongle = &(dongle_tab[i]);
 		coder_tab[i].right_dongle = &(dongle_tab[(i + 1) % nb_coders]);
 		coder_tab[i].burnout_time = \
-get_time_ms() + global->args.time_to_burnout;
+get_time_ms() + g_data->args.time_to_burnout;
 		coder_tab[i].running = 1;
+		coder_tab[i].nb_compil = 0;
 		i++;
 	}
 	return (coder_tab);
