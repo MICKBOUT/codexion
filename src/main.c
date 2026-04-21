@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:13:14 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/21 14:36:38 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/21 15:28:50 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,7 @@ void	*worker(void *coder_ptr)
 	g_data = coder->global_ptr;
 	while (mutex_read_int(&g_data->lock_state, &g_data->state))
 	{
-		pthread_mutex_lock(&g_data->queue.lock);
-		mutex_lock_dongle(coder);
+		mutex_lock_worked(coder);
 		if (!coder->in_queue)
 		{
 			if (dongle_available(coder->left_dongle, coder->right_dongle))
@@ -51,7 +50,7 @@ void	*worker(void *coder_ptr)
 			continue ;
 		}
 		take_dongles(coder);
-		queue_rm_coder(coder);
+		queue_rm_head(coder);
 		mutex_unlock_worked(coder);
 		execute_coder(coder);
 	}

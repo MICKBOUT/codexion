@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:13:09 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/21 14:31:10 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/21 15:28:48 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void		add_coder_to_dongle(t_dongle *dongle_tab, t_coder *coder_tab);
 int			parsing_arg(char **av, t_arg *arg);
 
 // queue.c
-void		queue_rm_coder(t_coder *coder);
+void		queue_rm_head(t_coder *coder);
 void		add_coder(t_coder *coder);
 
 //timing.c
@@ -101,6 +101,7 @@ long		get_time_ms(void);
 long		get_time_since_start(long start_time);
 
 // utils_mutex_lock.c
+void		mutex_lock_worked(t_coder *coder);
 void		mutex_unlock_worked(t_coder *coder);
 void		mutex_lock_dongle(t_coder *coder);
 void		mutex_unlock_dongle(t_coder *coder);
