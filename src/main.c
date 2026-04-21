@@ -6,13 +6,13 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:13:14 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/21 12:53:21 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/21 13:06:47 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-void	launching_coder(t_coder *coder, g_global *g_data)
+void	launching_coder(t_coder *coder, t_global *g_data)
 {
 	pthread_mutex_lock(&g_data->queue.lock);
 	if (g_data->queue.head == coder)
@@ -23,7 +23,7 @@ void	launching_coder(t_coder *coder, g_global *g_data)
 			rm_coder(coder);
 			execute_coder(coder);
 			mutex_add_int(&(coder->lock), &(coder->nb_compil), 1);
-			continue ;
+			return ;
 		}
 		mutex_unlock_dongle(coder);
 	}
