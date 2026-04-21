@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:13:09 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/21 11:29:02 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/21 11:31:46 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ typedef struct s_coder	t_coder;
 typedef struct s_arg
 {
 	int		number_of_coders;
-
 	int		time_to_burnout;
 	int		time_to_compile;
 	int		time_to_debug;
@@ -59,7 +58,7 @@ typedef struct s_global
 	long			start_time;
 }	t_global;
 
-// next used for queue, ell accese w/ tab[i	]
+// next used for queue, ell accese w/ tab[i]
 typedef struct s_coder
 {
 	pthread_mutex_t	lock;
