@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:13:14 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/20 18:22:12 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/21 11:22:24 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,20 @@ void	*worker(void *coder_ptr)
 	g_data = coder->global_ptr;
 	while (mutex_read_int(&g_data->lock_state, &g_data->state))
 	{
-		mutex_lock_dongle(coder);
-		if (dongle_available(coder->left_dongle, coder->right_dongle))
-		{
-			execute_coder(coder);
-			mutex_add_int(&(coder->lock), &(coder->nb_compil), 1);
-		}
+		if (coder->in_queue == 0)
+			add_coder(coder);
 		else
-			mutex_unlock_dongle(coder);
+		{
+			pthread_mutex_lock(&g_data->queue.lock);
+			if (g_data->queue.head == coder)
+			{
+				rm_coder(coder);
+				mutex_lock_dongle(coder);
+				execute_coder(coder);
+			}
+			else
+				pthread_mutex_unlock(&g_data->queue.lock);
+		}
 	}
 	return (NULL);
 }

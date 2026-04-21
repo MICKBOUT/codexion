@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/16 17:56:15 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/20 16:21:12 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/21 09:54:58 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,4 +89,5 @@ void	execute_coder(t_coder *coder)
 	if (!mutex_read_int(&g_data->lock_state, &g_data->state))
 		return ;
 	coder_refactor(coder);
+	mutex_add_int(&(coder->lock), &(coder->nb_compil), 1);
 }

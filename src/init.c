@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 13:25:44 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/20 18:21:51 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/21 11:21:21 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ t_global	init_g_data(t_arg args)
 
 	pthread_mutex_init(&g_data.lock_printf, NULL);
 	pthread_mutex_init(&g_data.lock_state, NULL);
+	pthread_mutex_init(&g_data.queue.lock, NULL);
+	g_data.queue.head = NULL;
 	g_data.threads = malloc(\
 sizeof(pthread_t) * (args.number_of_coders + 1));
 	g_data.args = args;
@@ -65,6 +67,8 @@ t_coder	*init_coder_tab(int nb_coders, t_dongle *dongle_tab, t_global *g_data)
 		coder_tab[i].burnout_time = \
 get_time_ms() + g_data->args.time_to_burnout;
 		coder_tab[i].nb_compil = 0;
+		coder_tab[i].next = NULL;
+		coder_tab[i].in_queue = 0;
 		i++;
 	}
 	return (coder_tab);

@@ -8,6 +8,7 @@ SRCS=\
 	init.c				\
 	main.c				\
 	parsing.c			\
+	queue.c				\
 	timing.c			\
 	utils_mutex_lock.c	\
 	utils_mutex.c		\

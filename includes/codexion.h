@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:13:09 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/20 18:21:49 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/21 11:29:02 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,12 @@
 #include <sys/time.h>
 #include <unistd.h>
 
+typedef struct s_coder	t_coder;
+
 typedef struct s_arg
 {
 	int		number_of_coders;
+
 	int		time_to_burnout;
 	int		time_to_compile;
 	int		time_to_debug;
@@ -39,16 +42,24 @@ typedef struct s_dongle
 	int				id;
 }	t_dongle;
 
+typedef struct s_queue
+{
+	pthread_mutex_t	lock;
+	t_coder			*head;
+}	t_queue;
+
 typedef struct s_global
 {
 	pthread_mutex_t	lock_state;
 	pthread_mutex_t	lock_printf;
 	pthread_t		*threads;
 	t_arg			args;
+	t_queue			queue;
 	int				state;
 	long			start_time;
 }	t_global;
 
+// next used for queue, ell accese w/ tab[i	]
 typedef struct s_coder
 {
 	pthread_mutex_t	lock;
@@ -56,8 +67,10 @@ typedef struct s_coder
 	t_dongle		*left_dongle;
 	t_dongle		*right_dongle;
 	long			burnout_time;
+	int				in_queue;
 	int				nb_compil;
 	int				id;
+	t_coder			*next;
 }	t_coder;
 
 //execute_coder.c
@@ -76,6 +89,10 @@ int nb_coders, t_dongle *dongle_tab, t_global *g_data);
 
 // parsing.c
 int			parsing_arg(char **av, t_arg *arg);
+
+// queue.c
+void		rm_coder(t_coder *coder);
+void		add_coder(t_coder *coder);
 
 //timing.c
 long		get_time_ms(void);
