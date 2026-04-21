@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 13:25:44 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/21 11:21:21 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/21 14:29:07 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,4 +72,21 @@ get_time_ms() + g_data->args.time_to_burnout;
 		i++;
 	}
 	return (coder_tab);
+}
+
+void	add_coder_to_dongle(t_dongle *dongle_tab, t_coder *coder_tab)
+{
+	t_global	*g_data;
+	int			nb_coders;
+	int			i;
+
+	g_data = coder_tab[0].global_ptr;
+	nb_coders = g_data->args.number_of_coders;
+	i = 0;
+	while (i < nb_coders)
+	{
+		dongle_tab[i].left = &(coder_tab[i]);
+		dongle_tab[i].right = &(coder_tab[(i + 1) % nb_coders]);
+		i++;
+	}
 }

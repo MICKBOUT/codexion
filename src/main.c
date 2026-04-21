@@ -6,30 +6,30 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:13:14 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/21 13:06:47 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/21 14:36:38 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-void	launching_coder(t_coder *coder, t_global *g_data)
+static void	take_dongles(t_coder *coder)
 {
-	pthread_mutex_lock(&g_data->queue.lock);
-	if (g_data->queue.head == coder)
-	{
-		mutex_lock_dongle(coder);
-		if (dongle_available(coder->left_dongle, coder->right_dongle))
-		{
-			rm_coder(coder);
-			execute_coder(coder);
-			mutex_add_int(&(coder->lock), &(coder->nb_compil), 1);
-			return ;
-		}
-		mutex_unlock_dongle(coder);
-	}
-	pthread_mutex_unlock(&g_data->queue.lock);
+	t_dongle	*right;
+	t_dongle	*left;
+
+	left = coder->left_dongle;
+	left->available = 0;
+	locked_printf(&coder->global_ptr->lock_printf, \
+"%ld %d has taken a dongle\n", \
+get_time_since_start(coder->global_ptr->start_time), coder->id);
+	right = coder->right_dongle;
+	right->available = 0;
+	locked_printf(&coder->global_ptr->lock_printf, \
+"%ld %d has taken a dongle\n", \
+get_time_since_start(coder->global_ptr->start_time), coder->id);
 }
 
+// while (global_status == waiting) (usleep 100); // good idea ?
 void	*worker(void *coder_ptr)
 {
 	t_coder		*coder;
@@ -41,12 +41,19 @@ void	*worker(void *coder_ptr)
 	g_data = coder->global_ptr;
 	while (mutex_read_int(&g_data->lock_state, &g_data->state))
 	{
-		if (coder->in_queue == 0)
+		pthread_mutex_lock(&g_data->queue.lock);
+		mutex_lock_dongle(coder);
+		if (!coder->in_queue)
 		{
-			add_coder(coder);
+			if (dongle_available(coder->left_dongle, coder->right_dongle))
+				add_coder(coder);
+			mutex_unlock_worked(coder);
 			continue ;
 		}
-		launching_coder(coder, g_data);
+		take_dongles(coder);
+		queue_rm_coder(coder);
+		mutex_unlock_worked(coder);
+		execute_coder(coder);
 	}
 	return (NULL);
 }
@@ -109,6 +116,7 @@ int	main(int ac, char **av)
 	coder_tab = init_coder_tab(args.number_of_coders, dongle_tab, &g_data);
 	if ((!coder_tab) || (!dongle_tab) || (!g_data.threads))
 		return (exit_free(coder_tab, dongle_tab, g_data));
+	add_coder_to_dongle(dongle_tab, coder_tab);
 	i = -1;
 	while (++i < args.number_of_coders)
 		pthread_create(&g_data.threads[i], NULL, worker, coder_tab + i);

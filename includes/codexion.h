@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:13:09 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/21 11:31:46 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/21 14:31:10 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ typedef struct s_dongle
 {
 	pthread_mutex_t	lock_available;
 	long			end_cooldown;
+	t_coder			*left;
+	t_coder			*right;
 	int				available;
 	int				id;
 }	t_dongle;
@@ -85,12 +87,13 @@ t_global	init_g_data(t_arg args);
 t_dongle	*init_dongle_tab(int nb_coders);
 t_coder		*init_coder_tab(\
 int nb_coders, t_dongle *dongle_tab, t_global *g_data);
+void		add_coder_to_dongle(t_dongle *dongle_tab, t_coder *coder_tab);
 
 // parsing.c
 int			parsing_arg(char **av, t_arg *arg);
 
 // queue.c
-void		rm_coder(t_coder *coder);
+void		queue_rm_coder(t_coder *coder);
 void		add_coder(t_coder *coder);
 
 //timing.c
@@ -98,6 +101,7 @@ long		get_time_ms(void);
 long		get_time_since_start(long start_time);
 
 // utils_mutex_lock.c
+void		mutex_unlock_worked(t_coder *coder);
 void		mutex_lock_dongle(t_coder *coder);
 void		mutex_unlock_dongle(t_coder *coder);
 

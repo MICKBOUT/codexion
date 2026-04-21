@@ -6,20 +6,11 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/16 17:56:15 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/21 13:11:14 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/21 13:58:29 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
-
-static void	take_dongle(t_coder *coder, t_dongle *dongle)
-{
-	dongle->available = 0;
-	pthread_mutex_unlock(&dongle->lock_available);
-	locked_printf(&coder->global_ptr->lock_printf, \
-"%ld %d has taken a dongle\n", \
-get_time_since_start(coder->global_ptr->start_time), coder->id);
-}
 
 static void	coder_do_task(\
 	t_coder *coder, int set_dongle_free, long wait_time, char *task)
@@ -47,8 +38,6 @@ void	execute_coder(t_coder *coder)
 {
 	t_global	*g_data;
 
-	take_dongle(coder, coder->left_dongle);
-	take_dongle(coder, coder->right_dongle);
 	g_data = coder->global_ptr;
 	if (!mutex_read_int(&g_data->lock_state, &g_data->state))
 		return ;
