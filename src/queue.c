@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/21 10:06:12 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/21 15:29:39 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/22 12:28:55 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ void	queue_rm_head(t_coder *coder)
 	t_coder	*node;
 	t_coder	*tmp;
 
-	node = coder;
-	left = coder->left_dongle->left;
+	node = coder->global_ptr->queue.head;
+	left = node->left_dongle->left;
 	right = coder->right_dongle->right;
 	while (node->next)
 	{

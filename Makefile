@@ -9,6 +9,7 @@ SRCS=\
 	main.c				\
 	parsing.c			\
 	queue.c				\
+	set_variable.c		\
 	timing.c			\
 	utils_mutex_lock.c	\
 	utils_mutex.c		\
@@ -44,7 +45,7 @@ $(TSAN_NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(TSAN_NAME)
 
 run_tsan: tsan
-	./$(TSAN_NAME) 8 1000 100 100 100 10 10 "edf"
+	./$(TSAN_NAME) 8 1000 100 100 100 3 10 "edf"
 
 clean:
 	rm -rf $(OBJS) $(DEPS) $(OBJDIR)

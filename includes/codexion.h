@@ -6,13 +6,12 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:13:09 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/21 15:28:48 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/22 13:24:21 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <limits.h>
 #include <pthread.h>
-#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -35,7 +34,7 @@ typedef struct s_arg
 
 typedef struct s_dongle
 {
-	pthread_mutex_t	lock_available;
+	pthread_mutex_t	lock;
 	long			end_cooldown;
 	t_coder			*left;
 	t_coder			*right;
@@ -81,13 +80,14 @@ void		execute_coder(t_coder *coder);
 int			exit_error_parsing(void);
 int			exit_free(\
 t_coder *coder_tab, t_dongle *dongle_tab, t_global g_data);
+int			error_exit_free(\
+t_coder *coder_tab, t_dongle *dongle_tab, t_global g_data);
 
 // init.c
 t_global	init_g_data(t_arg args);
 t_dongle	*init_dongle_tab(int nb_coders);
 t_coder		*init_coder_tab(\
 int nb_coders, t_dongle *dongle_tab, t_global *g_data);
-void		add_coder_to_dongle(t_dongle *dongle_tab, t_coder *coder_tab);
 
 // parsing.c
 int			parsing_arg(char **av, t_arg *arg);
@@ -95,6 +95,11 @@ int			parsing_arg(char **av, t_arg *arg);
 // queue.c
 void		queue_rm_head(t_coder *coder);
 void		add_coder(t_coder *coder);
+
+//set_variable.c
+void		set_timestamp(t_coder *coder_tab, t_global *g_data);
+void		set_dongle_available_after_cooldown(t_coder *coder);
+void		set_variable(t_coder *coder_tab, t_dongle *dongle_tab);
 
 //timing.c
 long		get_time_ms(void);
@@ -114,6 +119,7 @@ long		mutex_read_burnout_time(t_coder *coder);
 void		mutex_write_burnout_time(t_coder *coder, long time);
 
 // utils.c
-void		set_dongle_available_after_cooldown(t_coder *coder);
 void		locked_printf(pthread_mutex_t *lock, const char *fmt, ...);
 int			dongle_available(t_dongle *l_dongle, t_dongle *r_dongle);
+void		wait_for_start(t_global *g_data);
+int			mod(int nb, int m);

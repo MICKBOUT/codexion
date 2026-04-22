@@ -6,28 +6,11 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/16 14:22:37 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/20 18:10:58 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/22 13:52:13 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
-
-void	set_dongle_available_after_cooldown(t_coder *coder)
-{
-	long	timestamp_ms;
-
-	timestamp_ms = get_time_ms();
-	pthread_mutex_lock(&coder->left_dongle->lock_available);
-	coder->left_dongle->available = 1;
-	coder->left_dongle->end_cooldown = \
-timestamp_ms + coder->global_ptr->args.dongle_cooldown;
-	pthread_mutex_unlock(&coder->left_dongle->lock_available);
-	pthread_mutex_lock(&coder->right_dongle->lock_available);
-	coder->right_dongle->available = 1;
-	coder->right_dongle->end_cooldown = \
-timestamp_ms + coder->global_ptr->args.dongle_cooldown;
-	pthread_mutex_unlock(&coder->right_dongle->lock_available);
-}
 
 void	locked_printf(pthread_mutex_t *lock, const char *fmt, ...)
 {
@@ -50,4 +33,17 @@ int	dongle_available(t_dongle *l_dongle, t_dongle *r_dongle)
 	if (r_dongle->available == 0 || r_dongle->end_cooldown >= timestamp_ms)
 		return (0);
 	return (1);
+}
+
+int	mod(int nb, int m)
+{
+	if (nb < m)
+		nb += m;
+	return (nb % m);
+}
+
+void	wait_for_start(t_global *g_data)
+{
+	while (mutex_read_int(&g_data->lock_state, &g_data->state) == 2)
+		usleep(100);
 }
