@@ -29,7 +29,7 @@ DEPS= $(OBJS:.o=.d)
 all: $(NAME)
 
 $(NAME): $(OBJS) Makefile
-	$(CC) $(OBJS) -o $@
+	$(CC) $(CFLAGS) $(OBJS) -o $@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(dir $@)

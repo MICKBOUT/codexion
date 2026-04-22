@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/16 14:22:37 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/22 13:52:13 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/22 14:13:24 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ int	dongle_available(t_dongle *l_dongle, t_dongle *r_dongle)
 	long	timestamp_ms;
 
 	timestamp_ms = get_time_ms();
-	if (l_dongle->available == 0 || l_dongle->end_cooldown >= timestamp_ms)
+	if (l_dongle->available == 0 || l_dongle->end_cooldown > timestamp_ms)
 		return (0);
-	if (r_dongle->available == 0 || r_dongle->end_cooldown >= timestamp_ms)
+	if (r_dongle->available == 0 || r_dongle->end_cooldown > timestamp_ms)
 		return (0);
 	return (1);
 }
