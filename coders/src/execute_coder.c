@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/16 17:56:15 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/22 13:58:45 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/22 15:10:12 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,7 @@ static void	coder_do_task(\
 	start = get_time_ms();
 	if (compiling)
 		mutex_write_burnout_time(coder, start + g_data->args.time_to_burnout);
-	locked_printf(&g_data->lock_printf, "%ld %d %s\n", \
-get_time_since_start(g_data->start_time), coder->id, task);
+	locked_printf(g_data, 0, coder->id, task);
 	current = get_time_ms();
 	while (current - start < (wait_time) && \
 mutex_read_int(&g_data->lock_state, &g_data->state))

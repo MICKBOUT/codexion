@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:13:14 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/22 13:58:29 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/22 15:10:45 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,15 @@ static void	take_dongles(t_coder *coder)
 {
 	t_dongle	*right;
 	t_dongle	*left;
+	char		*str;
 
+	str = "has taken a dongle";
 	left = coder->left_dongle;
 	left->available = 0;
-	locked_printf(&coder->global_ptr->lock_printf, \
-"%ld %d has taken a dongle\n", \
-get_time_since_start(coder->global_ptr->start_time), coder->id);
+	locked_printf(coder->global_ptr, 0, coder->id, str);
 	right = coder->right_dongle;
 	right->available = 0;
-	locked_printf(&coder->global_ptr->lock_printf, \
-"%ld %d has taken a dongle\n", \
-get_time_since_start(coder->global_ptr->start_time), coder->id);
+	locked_printf(coder->global_ptr, 0, coder->id, str);
 }
 
 void	*worker(void *coder_ptr)
@@ -70,8 +68,7 @@ int	monitoring_coder(t_coder *coder_tab, int *nb_coder_ended)
 		g_data = coder_tab[i].global_ptr;
 		if (mutex_read_burnout_time(coder_tab + i) <= get_time_ms())
 		{
-			locked_printf(&g_data->lock_printf, "%ld %d burned out\n", \
-get_time_since_start(g_data->start_time), coder_tab[i].id);
+			locked_printf(g_data, 1, coder_tab[i].id, "burned out");
 			return (0);
 		}
 		if (mutex_read_int(&coder_tab[i].lock, &((coder_tab + i)->nb_compil)) >= \

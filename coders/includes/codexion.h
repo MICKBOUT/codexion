@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:13:09 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/22 13:24:21 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/22 15:12:36 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct s_global
 	pthread_t		*threads;
 	t_arg			args;
 	t_queue			queue;
+	int				stop_printf;
 	int				state;
 	long			start_time;
 }	t_global;
@@ -119,7 +120,7 @@ long		mutex_read_burnout_time(t_coder *coder);
 void		mutex_write_burnout_time(t_coder *coder, long time);
 
 // utils.c
-void		locked_printf(pthread_mutex_t *lock, const char *fmt, ...);
+void		locked_printf(t_global *g_data, int is_burnout, int id, char *task);
 int			dongle_available(t_dongle *l_dongle, t_dongle *r_dongle);
 void		wait_for_start(t_global *g_data);
 int			mod(int nb, int m);

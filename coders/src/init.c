@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 13:25:44 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/22 12:59:33 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/22 15:06:10 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ t_global	init_g_data(t_arg args)
 	g_data.queue.head = NULL;
 	g_data.args = args;
 	g_data.state = 2;
+	g_data.stop_printf = 0;
 	g_data.threads = malloc(sizeof(pthread_t) * (args.number_of_coders + 1));
 	if (!g_data.threads)
 		return (g_data);

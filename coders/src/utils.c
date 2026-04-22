@@ -6,21 +6,23 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/16 14:22:37 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/22 14:13:24 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/22 15:18:04 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-void	locked_printf(pthread_mutex_t *lock, const char *fmt, ...)
+void	locked_printf(t_global *g_data, int is_burnout, int id, char *task)
 {
-	va_list	args;
-
-	pthread_mutex_lock(lock);
-	va_start(args, fmt);
-	vprintf(fmt, args);
-	va_end(args);
-	pthread_mutex_unlock(lock);
+	pthread_mutex_lock(&g_data->lock_printf);
+	if ((g_data->stop_printf) == 0)
+	{
+		printf("%ld %d %s\n", \
+get_time_since_start(g_data->start_time), id, task);
+		if (is_burnout)
+			g_data->stop_printf = 1;
+	}
+	pthread_mutex_unlock(&g_data->lock_printf);
 }
 
 int	dongle_available(t_dongle *l_dongle, t_dongle *r_dongle)
