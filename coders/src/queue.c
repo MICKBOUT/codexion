@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/21 10:06:12 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/22 12:28:55 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/23 16:18:07 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,26 +26,9 @@ static int	queue_sorted(t_coder *node, t_coder *coder, int priority)
 
 void	queue_rm_head(t_coder *coder)
 {
-	t_coder	*left;
-	t_coder	*right;
 	t_coder	*node;
-	t_coder	*tmp;
 
 	node = coder->global_ptr->queue.head;
-	left = node->left_dongle->left;
-	right = coder->right_dongle->right;
-	while (node->next)
-	{
-		if (node->next == left || node->next == right)
-		{
-			tmp = node->next;
-			node->next = node->next->next;
-			tmp->next = NULL;
-			tmp->in_queue = 0;
-		}
-		else
-			node = node->next;
-	}
 	coder->global_ptr->queue.head = coder->next;
 	coder->in_queue = 0;
 }
@@ -61,6 +44,7 @@ void	add_coder(t_coder *coder)
 
 	g_data = coder->global_ptr;
 	queue = &g_data->queue;
+	priority = 0;
 	priority = (g_data->args.scheduler[0] == 'e');
 	if ((!queue->head) || (!queue_sorted(queue->head, coder, priority)))
 	{

@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/22 13:16:08 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/22 13:58:59 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/23 16:15:36 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@ void	set_timestamp(t_coder *coder_tab, t_global *g_data)
 	long	deadline;
 	int		i;
 
-	i = -1;
 	time = get_time_ms();
 	g_data->start_time = time;
 	deadline = time + g_data->args.time_to_burnout;
+	i = -1;
 	while (++i < g_data->args.number_of_coders)
 		mutex_write_burnout_time(coder_tab + i, deadline);
 }
@@ -59,7 +59,9 @@ void	set_variable(t_coder *coder_tab, t_dongle *dongle_tab)
 		i++;
 	}
 	i = -1;
-	while (++i < g_data->args.number_of_coders)
-		add_coder(&(coder_tab[i]));
+	while ((++i * 2) < g_data->args.number_of_coders)
+		add_coder(&(coder_tab[i * 2]));
 	i = -1;
+	while (((++i * 2) + 1) < g_data->args.number_of_coders)
+		add_coder(&(coder_tab[(i * 2) + 1]));
 }
