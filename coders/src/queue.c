@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/21 10:06:12 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/23 16:18:07 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/26 14:13:43 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,11 @@ static int	queue_sorted(t_coder *node, t_coder *coder, int priority)
 		return (1);
 	node_burnout = mutex_read_burnout_time(node);
 	coder_burnout = mutex_read_burnout_time(coder);
-	return (node_burnout < coder_burnout);
+	return (node_burnout <= coder_burnout);
 }
 
 void	queue_rm_head(t_coder *coder)
 {
-	t_coder	*node;
-
-	node = coder->global_ptr->queue.head;
 	coder->global_ptr->queue.head = coder->next;
 	coder->in_queue = 0;
 }
