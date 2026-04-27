@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:13:14 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/23 16:20:15 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/27 16:00:55 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ int	main(int ac, char **av)
 	if ((!coder_tab) || (!dongle_tab) || (!g_data.threads))
 		return (error_exit_free(coder_tab, dongle_tab, g_data));
 	i = -1;
-	set_variable(coder_tab, dongle_tab);
+	set_variable(coder_tab);
 	while (++i < args.number_of_coders)
 		pthread_create(&g_data.threads[i], NULL, worker, coder_tab + i);
 	pthread_create(&g_data.threads[i], NULL, monitoring, coder_tab);

@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:13:09 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/22 15:12:36 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/27 16:02:56 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,6 @@ typedef struct s_dongle
 {
 	pthread_mutex_t	lock;
 	long			end_cooldown;
-	t_coder			*left;
-	t_coder			*right;
 	int				available;
 	int				id;
 }	t_dongle;
@@ -100,7 +98,7 @@ void		add_coder(t_coder *coder);
 //set_variable.c
 void		set_timestamp(t_coder *coder_tab, t_global *g_data);
 void		set_dongle_available_after_cooldown(t_coder *coder);
-void		set_variable(t_coder *coder_tab, t_dongle *dongle_tab);
+void		set_variable(t_coder *coder_tab);
 
 //timing.c
 long		get_time_ms(void);
@@ -123,4 +121,3 @@ void		mutex_write_burnout_time(t_coder *coder, long time);
 void		locked_printf(t_global *g_data, int is_burnout, int id, char *task);
 int			dongle_available(t_dongle *l_dongle, t_dongle *r_dongle);
 void		wait_for_start(t_global *g_data);
-int			mod(int nb, int m);

@@ -6,7 +6,7 @@
 /*   By: mboutte <mboutte@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/22 13:16:08 by mboutte           #+#    #+#             */
-/*   Updated: 2026/04/26 14:12:42 by mboutte          ###   ########.fr       */
+/*   Updated: 2026/04/27 16:10:17 by mboutte          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ timestamp_ms + coder->global_ptr->args.dongle_cooldown;
 	pthread_mutex_unlock(&coder->right_dongle->lock);
 }
 
-void	set_variable(t_coder *coder_tab, t_dongle *dongle_tab)
+void	set_variable(t_coder *coder_tab)
 {
 	t_global	*g_data;
 	int			nb_coders;
@@ -51,13 +51,6 @@ void	set_variable(t_coder *coder_tab, t_dongle *dongle_tab)
 
 	g_data = coder_tab->global_ptr;
 	nb_coders = g_data->args.number_of_coders;
-	i = 0;
-	while (i < nb_coders)
-	{
-		dongle_tab[i].left = &(coder_tab[mod(i - 1, nb_coders)]);
-		dongle_tab[i].right = &(coder_tab[i]);
-		i++;
-	}
 	i = -1;
 	while ((++i * 2) < g_data->args.number_of_coders)
 		add_coder(&(coder_tab[i * 2]));
